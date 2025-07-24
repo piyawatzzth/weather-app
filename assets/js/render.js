@@ -1,3 +1,22 @@
+// แสดงเวลาไทยแบบเรียลไทม์
+function updateThaiTime() {
+  const timeElement = document.getElementById("time-thai");
+  const now = new Date();
+
+  const offset = 7 * 60; // UTC+7
+  const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+  const thaiTime = new Date(utc + offset * 60000);
+
+  const hours = thaiTime.getHours().toString().padStart(2, '0');
+  const minutes = thaiTime.getMinutes().toString().padStart(2, '0');
+  const seconds = thaiTime.getSeconds().toString().padStart(2, '0');
+
+  timeElement.textContent = `🕒 เวลาไทย: ${hours}:${minutes}:${seconds}`;
+}
+setInterval(updateThaiTime, 1000);
+updateThaiTime();
+
+// ดึงข้อมูล weather.json
 fetch('weather.json')
   .then(res => res.json())
   .then(data => {
