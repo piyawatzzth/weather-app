@@ -1,0 +1,30 @@
+body {
+  font-family: 'Kanit', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  margin: 0;
+  padding: 20px;
+  color: white;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+#weather-list > div {
+  background: rgba(255 255 255 / 0.15);
+  backdrop-filter: blur(10px);
+  margin-bottom: 15px;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+}
+
+#weather-list > div h3 {
+  margin: 0 0 10px 0;
+}
+
+#weather-list > div p {
+  margin: 5px 0;
+}
