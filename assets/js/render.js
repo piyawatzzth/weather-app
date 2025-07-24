@@ -1,4 +1,17 @@
-// ฟังก์ชันอัพเดตเวลาไทย
+
+// โหลดข้อมูล weather.json แล้วสร้าง dropdown กับแสดงข้อมูล
+fetch("weather.json")
+  .then((res) => res.json())
+  .then((data) => {
+    const container = document.getElementById("weather-list");
+    const select = document.getElementById("province-select");
+
+    if (!data.length) {
+      container.innerHTML = "<p>ยังไม่มีข้อมูล</p>";
+      return;
+    }
+
+    // ฟังก์ชันอัพเดตเวลาไทย
 function updateThaiTime() {
   const timeElement = document.getElementById("time-thai");
   if (!timeElement) return;
@@ -31,6 +44,53 @@ fetch("weather.json")
       container.innerHTML = "<p>ยังไม่มีข้อมูล</p>";
       return;
     }
+
+    // สร้าง dropdown จังหวัดไม่ซ้ำ
+    const provinces = [...new Set(data.map((item) => item.city))].sort();
+    provinces.forEach((province) => {
+      const option = document.createElement("option");
+      option.value = province;
+      option.textContent = province;
+      select.appendChild(option);
+    });
+
+    // ฟังก์ชันแสดงข้อมูลสภาพอากาศ
+    function render(list) {
+      if (!list.length) {
+        container.innerHTML = "<p>ไม่พบข้อมูลจังหวัดนี้</p>";
+        return;
+      }
+      container.innerHTML = list
+        .map(
+          (item) => `
+        <div class="weather-card">
+          <h3>${item.city}</h3>
+          <p>🌡 อุณหภูมิ: ${item.temp}°C</p>
+          <p>☁️ สภาพอากาศ: ${item.condition}</p>
+        </div>
+      `
+        )
+        .join("");
+    }
+
+    // แสดงข้อมูลทั้งหมดตอนโหลดหน้า
+    render(data);
+
+    // กดเลือกจังหวัดใน dropdown
+    select.addEventListener("change", () => {
+      const selected = select.value;
+      if (selected === "all") {
+        render(data);
+      } else {
+        render(data.filter((item) => item.city === selected));
+      }
+    });
+  })
+  .catch(() => {
+    document.getElementById("weather-list").innerHTML =
+      "<p>เกิดข้อผิดพลาดในการโหลดข้อมูล</p>";
+  });
+
 
     // สร้าง dropdown จังหวัดไม่ซ้ำ
     const provinces = [...new Set(data.map((item) => item.city))].sort();
