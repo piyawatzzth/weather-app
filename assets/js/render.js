@@ -11,6 +11,12 @@ function updateThaiTime() {
   const minutes = thaiTime.getMinutes().toString().padStart(2, '0');
   const seconds = thaiTime.getSeconds().toString().padStart(2, '0');
 
+  const timeString = now.toLocaleTimeString('th-TH', timeOptions);
+      const dayName = thaiDays[now.getDay()];
+      const day = now.getDate();
+      const month = thaiMonths[now.getMonth()];
+      const year = now.getFullYear() + 543;
+
   timeElement.textContent = `🕒 เวลาไทย: ${hours}:${minutes}:${seconds}`;
 }
 setInterval(updateThaiTime, 1000);
