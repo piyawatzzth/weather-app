@@ -92,14 +92,6 @@ footer {
   color: #f0f0f0;
 }
 
-#time-thai {
-  text-align: center;
-  font-size: 1.2rem;
-  margin-bottom: 20px;
-  color: #ffffffcc;
-  font-weight: 500;
-}
-
 /* Animation */
 @keyframes fadeIn {
   from {
