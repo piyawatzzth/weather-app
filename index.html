@@ -4,25 +4,248 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>🌦 สภาพอากาศประเทศไทย</title>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500&display=swap" rel="stylesheet" />
+   <script defer src="assets/js/render.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-  <link href="https://fonts.googleapis.com/css2?family=Kanit&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/css/style.css" />
-  <script defer src="assets/js/render.js"></script>
+    body {
+      font-family: 'Kanit', sans-serif;
+      background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+      min-height: 100vh;
+      color: #2d3436;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: white;
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .time-display {
+      text-align: center;
+      color: white;
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+      background: rgba(255,255,255,0.1);
+      padding: 15px;
+      border-radius: 15px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .current-time {
+      font-size: 1.5rem;
+      font-weight: 500;
+      margin-bottom: 5px;
+    }
+
+    .current-date {
+      font-size: 1rem;
+      opacity: 0.9;
+    }
+
+    .select-wrapper {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    select {
+      font-family: 'Kanit', sans-serif;
+      padding: 12px 20px;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 25px;
+      background: white;
+      color: #2d3436;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      cursor: pointer;
+      outline: none;
+      min-width: 250px;
+    }
+
+    #weather-list {
+      background: rgba(255,255,255,0.95);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      backdrop-filter: blur(10px);
+      text-align: center;
+      font-size: 1.2rem;
+      min-height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    footer {
+      text-align: center;
+      color: white;
+      margin-top: 30px;
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .loading::after {
+      content: '';
+      width: 20px;
+      height: 20px;
+      border: 2px solid #74b9ff;
+      border-top: 2px solid transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 15px;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .time-display {
+        padding: 12px;
+      }
+      
+      .current-time {
+        font-size: 1.3rem;
+      }
+    }
+  </style>
 </head>
 <body>
   <main class="container">
     <h1>🌤 สภาพอากาศประเทศไทย</h1>
-
+    
+    <div class="time-display">
+      <div class="current-time" id="current-time">⏰ กำลังโหลดเวลา...</div>
+      <div class="current-date" id="current-date"></div>
+    </div>
+    
     <div class="select-wrapper">
       <select id="province-select">
         <option value="all">🌏 แสดงทุกจังหวัด</option>
         <!-- ตัวเลือกจังหวัดจะถูกเพิ่มโดย render.js -->
       </select>
     </div>
-
-    <div id="weather-list">⏳ กำลังโหลดข้อมูล...</div>
-
+    
+    <div id="weather-list">
+      <div class="loading">⏳ กำลังโหลดข้อมูล</div>
+    </div>
+    
     <footer>อัปเดตทุกชั่วโมง • ข้อมูลจาก API</footer>
   </main>
+
+  <script>
+    // ฟังก์ชันแสดงเวลาไทย
+    function updateThaiTime() {
+      const now = new Date();
+      
+      // แปลงเป็นเวลาไทย (UTC+7)
+      const thaiTime = new Date(now.getTime() + (7 * 60 * 60 * 1000));
+      
+      // ตัวเลือกการแสดงผล
+      const timeOptions = {
+        timeZone: 'Asia/Bangkok',
+        hour12: false,
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      };
+      
+      const dateOptions = {
+        timeZone: 'Asia/Bangkok',
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      };
+      
+      // แปลงชื่อวันและเดือนเป็นภาษาไทย
+      const thaiDays = {
+        'Sunday': 'วันอาทิตย์',
+        'Monday': 'วันจันทร์',
+        'Tuesday': 'วันอังคาร',
+        'Wednesday': 'วันพุธ',
+        'Thursday': 'วันพฤหัสบดี',
+        'Friday': 'วันศุกร์',
+        'Saturday': 'วันเสาร์'
+      };
+      
+      const thaiMonths = {
+        'January': 'มกราคม',
+        'February': 'กุมภาพันธ์',
+        'March': 'มีนาคม',
+        'April': 'เมษายน',
+        'May': 'พฤษภาคม',
+        'June': 'มิถุนายน',
+        'July': 'กรกฎาคม',
+        'August': 'สิงหาคม',
+        'September': 'กันยายน',
+        'October': 'ตุลาคม',
+        'November': 'พฤศจิกายน',
+        'December': 'ธันวาคม'
+      };
+      
+      // สร้างข้อความวันที่และเวลา
+      const timeString = now.toLocaleTimeString('th-TH', timeOptions);
+      const englishDate = now.toLocaleDateString('en-US', dateOptions);
+      
+      // แปลงเป็นภาษาไทย
+      let thaiDateString = englishDate;
+      Object.keys(thaiDays).forEach(eng => {
+        thaiDateString = thaiDateString.replace(eng, thaiDays[eng]);
+      });
+      Object.keys(thaiMonths).forEach(eng => {
+        thaiDateString = thaiDateString.replace(eng, thaiMonths[eng]);
+      });
+      
+      // แปลงปี ค.ศ. เป็น พ.ศ.
+      const currentYear = now.getFullYear();
+      const buddhistYear = currentYear + 543;
+      thaiDateString = thaiDateString.replace(currentYear.toString(), buddhistYear.toString());
+      
+      // อัปเดตข้อความในหน้าเว็บ
+      document.getElementById('current-time').textContent = `🕐 ${timeString} น.`;
+      document.getElementById('current-date').textContent = thaiDateString;
+    }
+    
+    // อัปเดตเวลาทันทีและทุกวินาที
+    updateThaiTime();
+    setInterval(updateThaiTime, 1000);
+    
+    // เพิ่มการจัดการ dropdown (ถ้าต้องการ)
+    document.getElementById('province-select').addEventListener('change', function() {
+      const selectedValue = this.value;
+      console.log('Selected province:', selectedValue);
+      // ที่นี่สามารถเพิ่มโค้ดสำหรับการกรองข้อมูลสภาพอากาศได้
+    });
+  </script>
 </body>
 </html>
