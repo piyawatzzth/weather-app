@@ -1,22 +1,3 @@
-// แสดงเวลาไทยแบบอัพเดตทุกวินาที
-function updateThaiTime() {
-  const now = new Date();
-  const timeOptions = {
-    timeZone: 'Asia/Bangkok',
-    hour12: false,
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit'
-  };
-  const timeString = now.toLocaleTimeString('th-TH', timeOptions);
-  document.getElementById('time-thai').textContent = `🕒 เวลาไทย: ${timeString}`;
-}
-
-// เรียกฟังก์ชันอัพเดตเวลา และตั้งให้มันอัพเดตทุก 1 วิ
-updateThaiTime();
-setInterval(updateThaiTime, 1000);
-
-// โหลดข้อมูล weather.json พร้อมระบบเลือกจังหวัด
 fetch('weather.json')
   .then(res => res.json())
   .then(data => {
@@ -28,7 +9,7 @@ fetch('weather.json')
       return;
     }
 
-    // สร้าง dropdown จังหวัด (ไม่ซ้ำและเรียง)
+    // ✅ สร้าง dropdown จังหวัด
     const provinces = [...new Set(data.map(item => item.city))].sort();
     provinces.forEach(province => {
       const option = document.createElement('option');
@@ -37,7 +18,7 @@ fetch('weather.json')
       select.appendChild(option);
     });
 
-    // ฟังก์ชันแสดงข้อมูล
+    // ✅ ฟังก์ชันแสดงข้อมูล
     function render(list) {
       if (!list.length) {
         container.innerHTML = '<p>ไม่พบข้อมูลจังหวัดนี้</p>';
@@ -52,10 +33,10 @@ fetch('weather.json')
       `).join('');
     }
 
-    // แสดงทั้งหมดตอนเริ่ม
+    // ✅ แสดงทั้งหมดตอนเริ่ม
     render(data);
 
-    // เมื่อเลือกจังหวัด ให้แสดงข้อมูลกรอง
+    // ✅ เมื่อมีการเลือกจังหวัด
     select.addEventListener('change', () => {
       const selected = select.value;
       if (selected === 'all') {
