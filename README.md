@@ -1,7 +1,7 @@
 # 🌤️ เว็บไซต์แสดงสภาพอากาศ 77 จังหวัดของประเทศไทย
 
-[![GitHub Pages](https://img.shields.io/badge/view--site-live-blue?style=for-the-badge&logo=github)](https://piyawatzzth.github.io/)![GitHub repo size](https://img.shields.io/github/repo-size/piyawatzzth/piyawatzzth.github.io)
-![GitHub stars](https://img.shields.io/github/stars/piyawatzzth/piyawatzzth.github.io)
+[![GitHub Pages](https://img.shields.io/badge/view--site-live-blue?style=for-the-badge&logo=github)](https://piyawatzzth.github.io/)[![GitHub repo size](https://img.shields.io/github/repo-size/piyawatzzth/piyawatzzth.github.io)
+[![GitHub stars](https://img.shields.io/github/stars/piyawatzzth/piyawatzzth.github.io)
 
 ## 🇹🇭 ภาษาไทย
 
