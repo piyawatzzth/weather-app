@@ -4,7 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>🌦 สภาพอากาศประเทศไทย</title>
-  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500&display=swap" rel="stylesheet" />
+  <script defer src="assets/js/render.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
     * {
       margin: 0;
@@ -14,104 +15,124 @@
 
     body {
       font-family: 'Kanit', sans-serif;
-      background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       min-height: 100vh;
-      color: #2d3436;
+      color: #2c3e50;
+      overflow-x: hidden;
     }
 
     .container {
-      max-width: 1200px;
+      max-width: 1400px;
       margin: 0 auto;
       padding: 20px;
     }
 
-    h1 {
+    .header {
       text-align: center;
-      color: white;
-      font-size: 2.5rem;
-      margin-bottom: 10px;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      margin-bottom: 30px;
     }
 
-    .time-display {
-      text-align: center;
+    .main-title {
+      font-size: 3rem;
+      font-weight: 600;
       color: white;
-      font-size: 1.2rem;
-      margin-bottom: 30px;
-      background: rgba(255,255,255,0.1);
-      padding: 15px;
-      border-radius: 15px;
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255,255,255,0.2);
+      text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      margin-bottom: 10px;
+    }
+
+    .time-card {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 25px;
+      margin: 0 auto 30px;
+      max-width: 500px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     }
 
     .current-time {
-      font-size: 1.5rem;
+      font-size: 2.5rem;
       font-weight: 500;
-      margin-bottom: 5px;
+      color: white;
+      margin-bottom: 8px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
     }
 
     .current-date {
-      font-size: 1rem;
-      opacity: 0.9;
+      font-size: 1.2rem;
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 300;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 40px;
     }
 
     .select-wrapper {
-      text-align: center;
-      margin-bottom: 30px;
+      position: relative;
     }
 
     select {
       font-family: 'Kanit', sans-serif;
-      padding: 12px 20px;
       font-size: 1.1rem;
+      padding: 15px 25px;
       border: none;
-      border-radius: 25px;
+      border-radius: 50px;
       background: white;
-      color: #2d3436;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      color: #2c3e50;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
       cursor: pointer;
       outline: none;
-      min-width: 250px;
+      min-width: 300px;
+      appearance: none;
+      transition: all 0.3s ease;
     }
 
-    #weather-list {
-      background: rgba(255,255,255,0.95);
-      border-radius: 20px;
-      padding: 30px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    select:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .select-wrapper::after {
+      content: '▼';
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #667eea;
+      pointer-events: none;
+    }
+
+    .weather-container {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 25px;
+      padding: 40px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
       backdrop-filter: blur(10px);
-      text-align: center;
-      font-size: 1.2rem;
-      min-height: 200px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    footer {
-      text-align: center;
-      color: white;
-      margin-top: 30px;
-      font-size: 0.9rem;
-      opacity: 0.8;
+      min-height: 400px;
     }
 
     .loading {
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 10px;
+      height: 300px;
+      font-size: 1.3rem;
+      color: #667eea;
     }
 
-    .loading::after {
-      content: '';
-      width: 20px;
-      height: 20px;
-      border: 2px solid #74b9ff;
-      border-top: 2px solid transparent;
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid #e3f2fd;
+      border-top: 4px solid #667eea;
       border-radius: 50%;
       animation: spin 1s linear infinite;
+      margin-bottom: 20px;
     }
 
     @keyframes spin {
@@ -119,55 +140,159 @@
       100% { transform: rotate(360deg); }
     }
 
+    .weather-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .weather-card {
+      background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+      border-radius: 20px;
+      padding: 25px;
+      color: white;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .weather-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .province-name {
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .temperature {
+      font-size: 2.2rem;
+      font-weight: 500;
+      margin-bottom: 10px;
+    }
+
+    .weather-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 15px;
+    }
+
+    .humidity, .condition {
+      font-size: 0.95rem;
+      opacity: 0.9;
+    }
+
+    .footer {
+      text-align: center;
+      color: rgba(255, 255, 255, 0.8);
+      margin-top: 40px;
+      padding: 20px;
+      font-size: 1rem;
+    }
+
+    .update-time {
+      font-weight: 300;
+    }
+
+    /* Responsive Design */
     @media (max-width: 768px) {
       .container {
         padding: 15px;
       }
       
-      h1 {
-        font-size: 2rem;
-      }
-      
-      .time-display {
-        padding: 12px;
+      .main-title {
+        font-size: 2.2rem;
       }
       
       .current-time {
-        font-size: 1.3rem;
+        font-size: 2rem;
+      }
+      
+      .time-card {
+        padding: 20px;
+        margin-bottom: 25px;
+      }
+      
+      .weather-container {
+        padding: 25px;
+      }
+      
+      select {
+        min-width: 250px;
+        font-size: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .main-title {
+        font-size: 1.8rem;
+      }
+      
+      .current-time {
+        font-size: 1.6rem;
+      }
+      
+      select {
+        min-width: 200px;
+      }
+      
+      .weather-grid {
+        grid-template-columns: 1fr;
       }
     }
   </style>
 </head>
 <body>
-  <main class="container">
-    <h1>🌤 สภาพอากาศประเทศไทย</h1>
+  <div class="container">
+    <header class="header">
+      <h1 class="main-title">🌤 สภาพอากาศประเทศไทย</h1>
+      
+      <div class="time-card">
+        <div class="current-time" id="current-time">⏰ กำลังโหลดเวลา...</div>
+        <div class="current-date" id="current-date"></div>
+      </div>
+    </header>
     
-    <div class="time-display">
-      <div class="current-time" id="current-time">⏰ กำลังโหลดเวลา...</div>
-      <div class="current-date" id="current-date"></div>
+    <div class="controls">
+      <div class="select-wrapper">
+        <select id="province-select">
+          <option value="all">🌏 แสดงทุกจังหวัด</option>
+          <option value="กรุงเทพมหานคร">กรุงเทพมหานคร</option>
+          <option value="เชียงใหม่">เชียงใหม่</option>
+          <option value="เชียงราย">เชียงราย</option>
+          <option value="นครราชสีมา">นครราชสีมา</option>
+          <option value="ขอนแก่น">ขอนแก่น</option>
+          <option value="อุดรธานี">อุดรธานี</option>
+          <option value="สุราษฎร์ธานี">สุราษฎร์ธานี</option>
+          <option value="ภูเก็ต">ภูเก็ต</option>
+          <option value="หาดใหญ่">หาดใหญ่</option>
+          <option value="พัทยา">พัทยา</option>
+        </select>
+      </div>
     </div>
     
-    <div class="select-wrapper">
-      <select id="province-select">
-        <option value="all">🌏 แสดงทุกจังหวัด</option>
-        <!-- ตัวเลือกจังหวัดจะถูกเพิ่มโดย render.js -->
-      </select>
-    </div>
+    <main class="weather-container">
+      <div id="weather-list">
+        <div class="loading">
+          <div class="loading-spinner"></div>
+          <div>⏳ กำลังโหลดข้อมูลสภาพอากาศ...</div>
+        </div>
+      </div>
+    </main>
     
-    <div id="weather-list">
-      <div class="loading">⏳ กำลังโหลดข้อมูล</div>
-    </div>
-    
-    <footer>อัปเดตทุกชั่วโมง • ข้อมูลจาก API</footer>
-  </main>
+    <footer class="footer">
+      <div class="update-time">อัปเดตทุกชั่วโมง • ข้อมูลจาก API สภาพอากาศ</div>
+      <div style="margin-top: 10px; font-size: 0.9rem;">🇹🇭 กรมอุตุนิยมวิทยา</div>
+    </footer>
+  </div>
 
   <script>
     // ฟังก์ชันแสดงเวลาไทย
     function updateThaiTime() {
       const now = new Date();
-      
-      // แปลงเป็นเวลาไทย (UTC+7)
-      const thaiTime = new Date(now.getTime() + (7 * 60 * 60 * 1000));
       
       // ตัวเลือกการแสดงผล
       const timeOptions = {
@@ -178,73 +303,83 @@
         second: '2-digit'
       };
       
-      const dateOptions = {
-        timeZone: 'Asia/Bangkok',
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      };
-      
       // แปลงชื่อวันและเดือนเป็นภาษาไทย
-      const thaiDays = {
-        'Sunday': 'วันอาทิตย์',
-        'Monday': 'วันจันทร์',
-        'Tuesday': 'วันอังคาร',
-        'Wednesday': 'วันพุธ',
-        'Thursday': 'วันพฤหัสบดี',
-        'Friday': 'วันศุกร์',
-        'Saturday': 'วันเสาร์'
-      };
+      const thaiDays = ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'];
+      const thaiMonths = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 
+                         'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
       
-      const thaiMonths = {
-        'January': 'มกราคม',
-        'February': 'กุมภาพันธ์',
-        'March': 'มีนาคม',
-        'April': 'เมษายน',
-        'May': 'พฤษภาคม',
-        'June': 'มิถุนายน',
-        'July': 'กรกฎาคม',
-        'August': 'สิงหาคม',
-        'September': 'กันยายน',
-        'October': 'ตุลาคม',
-        'November': 'พฤศจิกายน',
-        'December': 'ธันวาคม'
-      };
-      
-      // สร้างข้อความวันที่และเวลา
       const timeString = now.toLocaleTimeString('th-TH', timeOptions);
-      const englishDate = now.toLocaleDateString('en-US', dateOptions);
-      
-      // แปลงเป็นภาษาไทย
-      let thaiDateString = englishDate;
-      Object.keys(thaiDays).forEach(eng => {
-        thaiDateString = thaiDateString.replace(eng, thaiDays[eng]);
-      });
-      Object.keys(thaiMonths).forEach(eng => {
-        thaiDateString = thaiDateString.replace(eng, thaiMonths[eng]);
-      });
-      
-      // แปลงปี ค.ศ. เป็น พ.ศ.
-      const currentYear = now.getFullYear();
-      const buddhistYear = currentYear + 543;
-      thaiDateString = thaiDateString.replace(currentYear.toString(), buddhistYear.toString());
+      const dayName = thaiDays[now.getDay()];
+      const day = now.getDate();
+      const month = thaiMonths[now.getMonth()];
+      const year = now.getFullYear() + 543; // แปลงเป็น พ.ศ.
       
       // อัปเดตข้อความในหน้าเว็บ
       document.getElementById('current-time').textContent = `🕐 ${timeString} น.`;
-      document.getElementById('current-date').textContent = thaiDateString;
+      document.getElementById('current-date').textContent = `วัน${dayName}ที่ ${day} ${month} ${year}`;
     }
-    
-    // อัปเดตเวลาทันทีและทุกวินาที
+
+    // ฟังก์ชันแสดงข้อมูลสภาพอากาศ
+    function displayWeatherData(data) {
+      const weatherList = document.getElementById('weather-list');
+      
+      if (data.length === 0) {
+        weatherList.innerHTML = '<div class="loading">ไม่พบข้อมูลสภาพอากาศ</div>';
+        return;
+      }
+      
+      const weatherGrid = document.createElement('div');
+      weatherGrid.className = 'weather-grid';
+      
+      data.forEach(item => {
+        const weatherCard = document.createElement('div');
+        weatherCard.className = 'weather-card';
+        weatherCard.innerHTML = `
+          <div class="province-name">${item.province}</div>
+          <div class="temperature">${item.temp}</div>
+          <div class="weather-info">
+            <div class="condition">🌤 ${item.condition}</div>
+            <div class="humidity">💧 ${item.humidity}</div>
+          </div>
+        `;
+        weatherGrid.appendChild(weatherCard);
+      });
+      
+      weatherList.innerHTML = '';
+      weatherList.appendChild(weatherGrid);
+    }
+
+    // จัดการการเลือกจังหวัด
+    document.getElementById('province-select').addEventListener('change', function() {
+      const selectedValue = this.value;
+      let filteredData = sampleWeatherData;
+      
+      if (selectedValue !== 'all') {
+        filteredData = sampleWeatherData.filter(item => item.province === selectedValue);
+      }
+      
+      // แสดงการโหลดก่อน
+      document.getElementById('weather-list').innerHTML = `
+        <div class="loading">
+          <div class="loading-spinner"></div>
+          <div>⏳ กำลังโหลดข้อมูล...</div>
+        </div>
+      `;
+      
+      // จำลองการโหลดข้อมูล
+      setTimeout(() => {
+        displayWeatherData(filteredData);
+      }, 800);
+    });
+
+    // เริ่มต้นการทำงาน
     updateThaiTime();
     setInterval(updateThaiTime, 1000);
     
-    // เพิ่มการจัดการ dropdown (ถ้าต้องการ)
-    document.getElementById('province-select').addEventListener('change', function() {
-      const selectedValue = this.value;
-      console.log('Selected province:', selectedValue);
-      // ที่นี่สามารถเพิ่มโค้ดสำหรับการกรองข้อมูลสภาพอากาศได้
-    });
+    // โหลดข้อมูลเริ่มต้น
+    setTimeout(() => {
+      displayWeatherData(sampleWeatherData);
+    }, 1500);
   </script>
 </body>
 </html>
