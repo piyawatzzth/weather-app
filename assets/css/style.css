@@ -77,3 +77,20 @@ footer {
     padding: 15px;
   }
 }
+
+.select-wrapper {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+#province-select {
+  font-family: 'Kanit', sans-serif;
+  font-size: 1rem;
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: none;
+  background: rgba(255,255,255,0.9);
+  color: #333;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  cursor: pointer;
+}
