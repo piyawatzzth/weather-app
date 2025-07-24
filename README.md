@@ -22,6 +22,12 @@
 
 ---
 
+## 📸 Demo Preview
+
+![Landing Page Preview](preview.png)  
+
+---
+
 ## 🌍 Thai Weather Forecast Website
 
 This project displays real-time (or updated) weather information for 77 provinces of Thailand using a simple and elegant interface.
