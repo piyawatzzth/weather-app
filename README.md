@@ -54,7 +54,7 @@ This project displays real-time (or updated) weather information for 77 province
 
 ## 🙌 เครดิต / Credits
 
-- พัฒนาโดย [piyawatzzth](https://github.com/piyawatzzth)
+- พัฒนาโดย [piyawatzzth](https://github.com/piyawatzzth)[playgamestobehappy](https://github.com/playgamestobehappy)
 - ฟอนต์จาก [Google Fonts - Kanit](https://fonts.google.com/specimen/Kanit)
 - สภาพอากาศสามารถดึงจาก API ภายนอกหรือเพิ่มเองใน `weather.json`
 
