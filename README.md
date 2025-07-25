@@ -46,12 +46,6 @@ This project displays real-time (or updated) weather information for 77 province
 
 ---
 
-## 📁 โครงสร้างไฟล์ / File Structure
-
-📁 piyawatzzth.github.io/ ├── index.html ├── style.css ├── render.js └── weather.json
-
----
-
 ## 🙌 เครดิต / Credits
 
 - พัฒนาโดย [piyawatzzth](https://github.com/piyawatzzth) [playgamestobehappy](https://github.com/playgamestobehappy)
